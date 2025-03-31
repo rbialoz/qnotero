@@ -116,6 +116,10 @@ class zoteroItem(object):
                 self.abstract = item[u'abstractNote']
             else:
                 self.abstract = item[u'abstractNote']
+            if u"name" in item:
+                self.groupname = item[u"name"]
+            else:
+                self.groupname = "Local"
         else:
             self.title = None
             self.collections = []
@@ -131,6 +135,7 @@ class zoteroItem(object):
             self.doi = None
             self.abstract = None
             self.url = None
+            self.groupname = None
             if isinstance(item, int):
                 self.id = item
             else:

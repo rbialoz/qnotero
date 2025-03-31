@@ -103,12 +103,15 @@ class LibZotero(object):
 		"""
 
     info_query = u"""
-    		select items.itemID, items.itemTypeID, fields.fieldName, itemDataValues.value, items.key
-    		from items, itemData, fields, itemDataValues
+    		select items.itemID, items.itemTypeID, fields.fieldName, itemDataValues.value, items.key, groups.name
+    		from items, itemData, fields, itemDataValues, libraries, groups
     		where
     			items.itemID = itemData.itemID
     			and itemData.fieldID = fields.fieldID
     			and itemData.valueID = itemDataValues.valueID
+                and itemData.itemID = items.itemID
+                and items.libraryID = libraries.libraryID
+                and libraries.libraryID = groups.libraryID
     			and (fields.fieldName = "date"
     			    or fields.fieldName = "title"
     				or fields.fieldName = "publicationTitle"
@@ -172,7 +175,7 @@ class LibZotero(object):
 
     retracted_query = u"select itemID from retractedItems"
 
-    attachmentid_query = u"""select itemTypes.itemTypeID from itemTypes 
+    attachmentid_query = u"""select itemTypes.itemTypeID from itemTypes
                              where itemTypes.typeName = "attachment"
                              """
 
@@ -423,4 +426,3 @@ class LibZotero(object):
         print(u"libzotero.search(): search for '%s' completed in %.3fs" %
               (query, time.time() - t))
         return results
-
